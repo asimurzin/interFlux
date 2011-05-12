@@ -233,7 +233,7 @@ def alphaEqn( mesh, phi, alpha1, rhoPhi, rho1, rho2, interface, nAlphaCorr ):
 
     for aCorr in range( nAlphaCorr ):
        phiAlpha = fvc.flux( phi, alpha1, alphaScheme ) + fvc.flux( -fvc.flux( -phir, 1.0 - alpha1, alpharScheme ), alpha1, alpharScheme )
-       MULES.explicitSolve( alpha1, phi, phiAlpha, 1, 0 )
+       MULES.explicitSolve( alpha1, phi, phiAlpha, 1.0, 0.0 )
        
        rhoPhi.ext_assign( phiAlpha * ( rho1 - rho2 ) + phi * rho2 )
 
