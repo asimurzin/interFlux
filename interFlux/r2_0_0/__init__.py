@@ -40,6 +40,7 @@ def _createFields( runTime, mesh ):
                                 mesh )
     
     ref.ext_Info() << "Reading field alpha1\n" << ref.nl
+    x = man.interfaceProperties # we should discuss it
     alpha1 = man.volScalarField( man.IOobject( ref.word( "alpha1" ),
                                                ref.fileName( runTime.timeName() ),
                                                mesh,
