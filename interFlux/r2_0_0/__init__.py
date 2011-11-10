@@ -40,7 +40,7 @@ def _createFields( runTime, mesh ):
                                 mesh )
     
     ref.ext_Info() << "Reading field alpha1\n" << ref.nl
-    x = man.interfaceProperties # we should discuss it
+    man.interfaceProperties # Load the following library to be able to create corresponding BC - "constantAlphaContactAngleFvPatchScalarField"
     alpha1 = man.volScalarField( man.IOobject( ref.word( "alpha1" ),
                                                ref.fileName( runTime.timeName() ),
                                                mesh,
@@ -111,12 +111,12 @@ def _createFields( runTime, mesh ):
     pRefCell = 0
     pRefValue = 0.0
     
-    pRefCell, pRefValue = ref.setRefCell( p, mesh.solutionDict().subDict( ref.word( "PIMPLE" ) ), pRefCell, pRefValue )
+    pRefCell, pRefValue = ref.setRefCell( p, p_rgh, mesh.solutionDict().subDict( ref.word( "PIMPLE" ) ), pRefCell, pRefValue )
     
     if p_rgh.needReference():
-       p += dimensionedScalar( ref.word( "p" ),
-                               p.dimensions(),
-                               pRefValue - ref.getRefCellValue(p, pRefCell) )
+       p += ref.dimensionedScalar( ref.word( "p" ),
+                                   p.dimensions(),
+                                   pRefValue - ref.getRefCellValue(p, pRefCell) )
        p_rgh << p - rho * gh
        pass
 
@@ -306,9 +306,9 @@ def _pEqn( runTime, mesh, UEqn, U, p, p_rgh, gh, ghf, phi, alpha1, rho, g, inter
     p == p_rgh + rho * gh
 
     if p_rgh.needReference():
-       p += dimensionedScalar( ref.word( "p" ),
-                               p.dimensions(),
-                               pRefValue - ref.getRefCellValue(p, pRefCell) )
+       p += ref.dimensionedScalar( ref.word( "p" ),
+                                   p.dimensions(),
+                                   pRefValue - ref.getRefCellValue(p, pRefCell) )
        p_rgh << p - rho * gh
        pass
     return cumulativeContErr
@@ -336,7 +336,7 @@ def main_standalone( argc, argv ):
     
     CoNum, meanCoNum = ref.CourantNo( mesh, phi, runTime )
     
-    runTime = ref.setInitialDeltaT( runTime, adjustTimeStep, maxCo, maxDeltaT, CoNum )
+    runTime = ref.setInitialDeltaT( runTime, adjustTimeStep, maxCo, CoNum )
     
     ref.ext_Info() << "\nStarting time loop\n" << ref.nl
     
