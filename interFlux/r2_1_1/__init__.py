@@ -40,7 +40,7 @@ def _createFields( runTime, mesh ):
                                 mesh )
     
     ref.ext_Info() << "Reading field alpha1\n" << ref.nl
-    man.interfaceProperties # Load the following library to be able to create corresponding BC - "constantAlphaContactAngleFvPatchScalarField"
+    man.interfaceProperties # Load corresponding library to be able to use the following BC - "constantAlphaContactAngleFvPatchScalarField"
     alpha1 = man.volScalarField( man.IOobject( ref.word( "alpha1" ),
                                                ref.fileName( runTime.timeName() ),
                                                mesh,
